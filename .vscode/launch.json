@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch)-App<project>",
+            "request": "launch",
+            "mainClass": "app",
+       
+            "vmArgs": "-javaagent:${workspaceFolder}/agent/lib/build/libs/lib.jar",
+          
+        }
+    ]
+}
