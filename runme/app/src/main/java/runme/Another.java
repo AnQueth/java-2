@@ -15,8 +15,12 @@ class Another {
                 e.printStackTrace();
             }
         })
-        .doOnNext(Another::LowerIt)
-        .map(String::toUpperCase);
+        //.flatMap(z-> Mono.error( new RuntimeException("test")))
+        .zipWith(Mono.just("World"))
+        .map(z->z.getT1() + " " + z.getT2())
+        .map(Another::LowerIt)
+        .map(String::toUpperCase)
+                .map(Another::LowerIt);
     }
 
     static String LowerIt(String s) {

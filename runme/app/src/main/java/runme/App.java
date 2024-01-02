@@ -3,7 +3,8 @@
  */
 package runme;
 
-
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.StatusCode;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import reactor.core.publisher.Mono;
 
@@ -14,17 +15,21 @@ public class App {
 
     @WithSpan
     public static void main(String[] args) throws InterruptedException {
- 
-
 
         int x = 0;
-        while(x < 10) {
+        while (x < 10) {
+            Span span = io.opentelemetry.api.GlobalOpenTelemetry.getTracer("test").spanBuilder("runme.App.main.loop")
+                    .setParent(io.opentelemetry.context.Context.current()).startSpan();
+
             System.out.println("Hello World!");
             Thread.sleep(100);
             Another another = new Another();
             Mono<String> s = another.Run();
-            s.subscribe(z->System.out.println(z)   );
+            s.subscribe(z -> System.out.println(z));
             x++;
+           
+
+            span.end();
         }
     }
 }
