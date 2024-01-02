@@ -24,8 +24,20 @@ public class App {
             System.out.println("Hello World!");
             Thread.sleep(100);
             Another another = new Another();
+            try 
+            {
             Mono<String> s = another.Run();
             s.subscribe(z -> System.out.println(z));
+            }
+            catch(Exception e)
+            {
+                span.recordException(e);
+                span.setStatus(StatusCode.ERROR);
+            }
+            finally
+            {
+                span.end();
+            }
             x++;
            
 

@@ -5,6 +5,9 @@ import reactor.core.publisher.Mono;
 class Another {
     Mono<String> Run() throws InterruptedException{
    
+        if (Math.random() < 0.3)
+            throw new RuntimeException("test");
+            
         return Mono.just("Hello from runme.Another")
         .filter(z->z.equals("Hello from runme.Another"))
         .doOnNext(z-> {
@@ -18,6 +21,8 @@ class Another {
         //.flatMap(z-> Mono.error( new RuntimeException("test")))
         .zipWith(Mono.just("World"))
         .map(z->z.getT1() + " " + z.getT2())
+ 
+    
         .map(Another::LowerIt)
         .map(String::toUpperCase)
                 .map(Another::LowerIt);

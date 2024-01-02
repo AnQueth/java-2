@@ -45,16 +45,23 @@ public class InterceptingClassTransformer implements ClassFileTransformer {
                 CtMethod[] methods = ctClass.getDeclaredMethods();
 
                 for (CtMethod method : methods) {
+                
                     method.addLocalVariable("injectedstartTime", CtClass.longType);
                     CtClass span = classPool.get("io.opentelemetry.api.trace.Span");
                     method.addLocalVariable("span", span);
                     CtClass tracerCtClass = classPool.get("io.opentelemetry.api.trace.Tracer");
                     method.addLocalVariable("tracer", tracerCtClass);
+                    CtClass exceClass = classPool.get("java.lang.Throwable");
                 
-            
+           
                     method.insertBefore("tracer = io.opentelemetry.api.GlobalOpenTelemetry.getTracer(\"test\"); " +
                     "span = tracer.spanBuilder(\"" +  method.getLongName()  +"\").setParent(io.opentelemetry.context.Context.current()).startSpan();" +
                     "injectedstartTime = System.nanoTime();");
+
+                    method.addCatch("{" + 
+                    "span.recordException($e);" +
+                    "throw $e; " +
+                    "}", exceClass);
 
                     method.insertAfter("System.out.println(\"Execution time (nano): " + method.getLongName() + " \" + (System.nanoTime() - injectedstartTime)); " +
                     "span.end();");

@@ -27,6 +27,8 @@ dependencies {
 
       implementation 'io.honeycomb:honeycomb-opentelemetry-sdk:1.5.2'
 
+ 
+        implementation 'net.bytebuddy:byte-buddy:1.14.11'
 }
 
 tasks.withType(JavaCompile) {
