@@ -19,11 +19,13 @@
 			"request": "launch",
 			"mainClass": "runme.App",
 			"projectName": "app",
-			"vmArgs": "-javaagent:../agent/lib/build/libs/agent.jar -javaagent:../runme/honeycomb-opentelemetry-javaagent.jar",
+			"vmArgs": "-javaagent:../agent/lib/build/libs/agent.jar=what=runme,usemono=true,ignores=main -javaagent:../runme/honeycomb-opentelemetry-javaagent.jar",
 			"env": {
-				"SERVICE_NAME": "my-favorite-service",
+				"SERVICE_NAME": "testing-runme",
 				"HONEYCOMB_API_KEY": "WgeN39rcqF5pl0Zu5uUJQB",
-				"HONEYCOMB_METRICS_DATASET": "my-metrics"
+				"HONEYCOMB_METRICS_DATASET": "runme-metrics",
+				"OTEL_JAVAAGENT_DEBUG" : true,
+				"OTEL_METRICS_EXPORTER": "logging"
 			}
 		}]
 	}

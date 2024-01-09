@@ -3,9 +3,15 @@
  */
 package runme;
 
+import io.opentelemetry.api.metrics.LongCounter;
+import io.opentelemetry.api.metrics.LongUpDownCounter;
+import io.opentelemetry.api.metrics.Meter;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
+import io.opentelemetry.context.Context;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
+import io.opentelemetry.sdk.OpenTelemetrySdk;
+import io.opentelemetry.sdk.OpenTelemetrySdkBuilder;
 import reactor.core.publisher.Mono;
 
 public class App {
@@ -16,32 +22,33 @@ public class App {
     @WithSpan
     public static void main(String[] args) throws InterruptedException {
 
+
+        Context parent = io.opentelemetry.context.Context.current();
+     
         int x = 0;
         while (x < 10) {
             Span span = io.opentelemetry.api.GlobalOpenTelemetry.getTracer("test").spanBuilder("runme.App.main.loop")
-                    .setParent(io.opentelemetry.context.Context.current()).startSpan();
+                    .setParent(parent).startSpan();
 
             System.out.println("Hello World!");
             Thread.sleep(100);
             Another another = new Another();
-            try 
-            {
-            Mono<String> s = another.Run();
-            s.subscribe(z -> System.out.println(z));
-            }
-            catch(Exception e)
-            {
+            try {
+                Mono<String> s = another.Run();
+                s.subscribe(z -> System.out.println(z));
+            } catch (Exception e) {
                 span.recordException(e);
                 span.setStatus(StatusCode.ERROR);
-            }
-            finally
-            {
+            } finally {
                 span.end();
             }
             x++;
-           
 
             span.end();
+
+          
         }
+ 
+
     }
 }

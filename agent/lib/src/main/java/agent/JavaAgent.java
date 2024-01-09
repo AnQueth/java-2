@@ -1,35 +1,59 @@
 package agent;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.lang.instrument.Instrumentation;
+import java.util.Properties;
+
 import net.bytebuddy.agent.builder.AgentBuilder;
-import net.bytebuddy.agent.builder.AgentBuilder.Transformer;
-import net.bytebuddy.asm.Advice;
-import net.bytebuddy.asm.AsmVisitorWrapper;
-import net.bytebuddy.description.type.TypeDescription;
-import net.bytebuddy.dynamic.DynamicType;
+import net.bytebuddy.agent.builder.AgentBuilder.Identified.Extendable;
 import net.bytebuddy.matcher.ElementMatchers;
-import net.bytebuddy.utility.JavaModule;
 
 public class JavaAgent {
 
-
     public static void premain(String agentArgs, Instrumentation instrumentation) throws InstantiationException {
 
-/*         InterceptingClassTransformer interceptingClassTransformer = new InterceptingClassTransformer();
+        /*
+         * InterceptingClassTransformer interceptingClassTransformer = new
+         * InterceptingClassTransformer();
+         * 
+         * interceptingClassTransformer.init();
+         * 
+         * instrumentation.addTransformer(interceptingClassTransformer);
+         */
 
-        interceptingClassTransformer.init();
+        Properties props = new Properties();
+        if (agentArgs != null) {
+            try {
+                props.load(new StringReader(agentArgs.replace(',', '\n')));
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
-        instrumentation.addTransformer(interceptingClassTransformer); */
- 
- 
+        }
 
-                new AgentBuilder.Default()
-                .type(ElementMatchers.nameStartsWithIgnoreCase("runme"))
+        String what = props.getProperty("what");
+        boolean useMono = props.getProperty("usemono") != null;
+        String ignores = props.getProperty("ignores");
+        String[] ignoreList = null;
+        if (ignores != null) {
+            ignoreList = ignores.split("\\|");
+        }
+
+        AgentBuilder g = new AgentBuilder.Default()
+                .type(ElementMatchers.nameStartsWithIgnoreCase(what).and(null != ignoreList
+                        ? ElementMatchers.whereNone(ElementMatchers.namedOneOf(ignoreList))
+                        : ElementMatchers.none()))
                 .transform(new BuddyTransformer())
-               // .with(AgentBuilder.Listener.StreamWriting.toSystemOut())
-                .with(AgentBuilder.TypeStrategy.Default.REDEFINE)
-                .installOn(instrumentation);
+                .with(AgentBuilder.TypeStrategy.Default.REDEFINE);
+        if (useMono) {
+            g = g.type(ElementMatchers.named("reactor.core.publisher.Mono"))
+                    .transform(new BuddyTransformer())
+                    .with(AgentBuilder.TypeStrategy.Default.REDEFINE);
+        }
 
+        g.installOn(instrumentation);
 
     }
 
