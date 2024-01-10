@@ -1,4 +1,4 @@
-package agent;
+package AutoSpanAgent;
 
 import java.io.IOException;
 import java.io.StringReader;

@@ -1,4 +1,4 @@
-package agent;
+package AutoSpanAgent;
 
 import net.bytebuddy.description.type.TypeDescription;
 

@@ -37,11 +37,11 @@ tasks.withType(JavaCompile) {
 }
 
 jar {
-    archiveFileName = "agent.jar"
+    archiveFileName = "autospanagent.jar"
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes(
-            'Premain-Class': 'agent.JavaAgent',
+            'Premain-Class': 'AutoSpanAgent.JavaAgent',
             'Can-Retransform-Classes': 'true'
         )
     }

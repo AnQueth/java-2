@@ -1,4 +1,4 @@
-package agent;
+package AutoSpanAgent;
 
 
 import io.opentelemetry.api.trace.Span;
