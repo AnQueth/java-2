@@ -24,7 +24,7 @@
 				"SERVICE_NAME": "testing-runme",
 				"HONEYCOMB_API_KEY": "WgeN39rcqF5pl0Zu5uUJQB",
 				"HONEYCOMB_METRICS_DATASET": "runme-metrics",
-				"OTEL_JAVAAGENT_DEBUG" : true,
+				"OTEL_JAVAAGENT_DEBUG" : false,
 				"OTEL_METRICS_EXPORTER": "logging"
 			}
 		}]
