@@ -24,6 +24,8 @@ dependencies {
 
       implementation 'io.projectreactor:reactor-core:3.4.10'
       implementation 'io.honeycomb:honeycomb-opentelemetry-sdk:1.5.2'
+
+ 
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

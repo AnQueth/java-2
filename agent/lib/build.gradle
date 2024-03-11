@@ -27,6 +27,8 @@ dependencies {
 
       implementation 'io.honeycomb:honeycomb-opentelemetry-sdk:1.5.2'
 
+ 
+        implementation 'net.bytebuddy:byte-buddy:1.14.11'
 }
 
 tasks.withType(JavaCompile) {
@@ -35,11 +37,11 @@ tasks.withType(JavaCompile) {
 }
 
 jar {
-    archiveFileName = "agent.jar"
+    archiveFileName = "autospanagent.jar"
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes(
-            'Premain-Class': 'agent.JavaAgent',
+            'Premain-Class': 'AutoSpanAgent.JavaAgent',
             'Can-Retransform-Classes': 'true'
         )
     }

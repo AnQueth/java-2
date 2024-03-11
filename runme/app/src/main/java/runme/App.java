@@ -3,8 +3,20 @@
  */
 package runme;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
+import io.opentelemetry.api.metrics.LongCounter;
+import io.opentelemetry.api.metrics.LongUpDownCounter;
+import io.opentelemetry.api.metrics.Meter;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.StatusCode;
+import io.opentelemetry.context.Context;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
+import io.opentelemetry.sdk.OpenTelemetrySdk;
+import io.opentelemetry.sdk.OpenTelemetrySdkBuilder;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public class App {
@@ -12,19 +24,100 @@ public class App {
         return "Hello World!";
     }
 
+    public Flux<String> Test() {
+        String[] s = new String[5];
+        s[0] = "a";
+        s[1] = "b";
+        s[2] = "c";
+        s[3] = "d";
+        s[4] = "e";
+
+        Stream<String> stream = Arrays.stream(s);
+
+        return Flux.fromStream(stream).filter(z -> {
+            System.out.println("Filtering");
+            return z.equals("b");
+        });
+
+    }
+
+    public Mono<List<String>> GetTest() {
+        return Test().collectList();
+    }
+
+    private static List<String> TestListed = null;
+
+    public Mono<List<String>> GetTestListed() {
+        if (TestListed == null)
+            TestListed = Test().collectList().block();
+
+        return Mono.just(TestListed);
+    }
+
     @WithSpan
     public static void main(String[] args) throws InterruptedException {
- 
 
+        Flux<String> f = new App().Test();
+        for (int i = 0; i < 10; i++) {
+            try {
+                String res = f.blockFirst();
+                System.out.println(res);
+            } catch (Throwable e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
+        for (int i = 0; i < 10; i++) {
+            Flux<String> f2 = new App().Test();
+            String res = f2.blockFirst();
+            System.out.println(res);
+
+        }
+
+        System.out.println("Testf3");
+        Mono<List<String>> f3 = new App().GetTest();
+        for (int i = 0; i < 10; i++) {
+            try {
+                List<String> res = f3.block();
+                System.out.println(res.get(0));
+            } catch (Throwable e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
+
+        System.out.println("Testf4");
+        Mono<List<String>> f4 = new App().GetTestListed();
+        for (int i = 0; i < 10; i++) {
+            List<String> res = f4.block();
+            System.out.println(res.get(0));
+
+        }
+
+        Context parent = io.opentelemetry.context.Context.current();
 
         int x = 0;
-        while(x < 10) {
+        while (x < 10) {
+            Span span = io.opentelemetry.api.GlobalOpenTelemetry.getTracer("test").spanBuilder("runme.App.main.loop")
+                    .setParent(parent).startSpan();
+
             System.out.println("Hello World!");
             Thread.sleep(100);
             Another another = new Another();
-            Mono<String> s = another.Run();
-            s.subscribe(z->System.out.println(z)   );
+            try {
+                Mono<String> s = another.Run();
+                s.subscribe(z -> System.out.println(z));
+            } catch (Exception e) {
+                span.recordException(e);
+                span.setStatus(StatusCode.ERROR);
+            } finally {
+                span.end();
+            }
             x++;
+
+            span.end();
+
         }
+
     }
 }
