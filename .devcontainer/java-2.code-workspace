@@ -6,11 +6,28 @@
 		{
 			"path": "../agent"
 		},
-
+		{
+			"path": "../kafkhasample"
+		},
+		{
+			"path": "../springkafkhasample"
+		},
+		{
+			"path": "../camel-kafka-demo"
+		},
+		{
+			"path": "../springkafkhasamplesender"
+		}
 	],
 	"settings": {
 		"java.compile.nullAnalysis.mode": "disabled"
 	},
+	"compounds": [
+        {
+            "name": "Run Receiver and Sender",
+            "configurations": ["receiver", "sender"]
+        }
+    ],
 	"launch": {
 		"version": "0.2.0",
 		"configurations": [        {
@@ -25,6 +42,71 @@
 				"HONEYCOMB_API_KEY": "WgeN39rcqF5pl0Zu5uUJQB",
 				"HONEYCOMB_METRICS_DATASET": "my-metrics"
 			}
-		}]
+		},
+	
+		{
+			"name": "Debug Ksfkha",
+			"type": "java",
+			"request": "launch",
+			"mainClass": "kafkhasample.App",
+			"projectName": "app_",
+			"vmArgs": "-javaagent:../kafkhasample/opentelemetry-javaagent.jar",
+			"env": {
+				"otel.resource.attributes=service.name" : "your-service-name",
+				"otel.traces.exporter":"zipkin",
+				"otel.exporter.zipkin.endpoint": "http://localhost:9411/api/v2/spans",
+				"otel.logs.exporter": "none"
+
+			}
+		},
+		{
+            "type": "java",
+            "name": "receiver",
+            "request": "launch",
+            "mainClass": "kafkhasamplereceiver.SpringBootConsoleApplication",
+            "projectName": "app__",
+            "vmArgs": "-javaagent:../opentelemetry-javaagent.jar",
+            "args": "",
+			"env": {
+				"otel.resource.attributes=service.name" : "receiver",
+				"otel.traces.exporter":"zipkin",
+				"otel.exporter.zipkin.endpoint": "http://localhost:9411/api/v2/spans",
+				"otel.logs.exporter": "none"
+
+			}
+        },
+		{
+            "type": "java",
+            "name": "pradeeps",
+            "request": "launch",
+            "mainClass": "com.iaa.camelkafkhademo.CamelKafkaDemoApplication",
+            "projectName": "camel-kafkha-demo",
+            "vmArgs": "-javaagent:../opentelemetry-javaagent.jar",
+            "args": "",
+			"env": {
+				"otel.resource.attributes=service.name" : "pradeeps",
+				"otel.traces.exporter":"zipkin",
+				"otel.exporter.zipkin.endpoint": "http://localhost:9411/api/v2/spans",
+				"otel.logs.exporter": "none"
+
+			}
+        },
+		{
+            "type": "java",
+            "name": "sender",
+            "request": "launch",
+            "mainClass": "kafkhasample2.SpringBootConsoleApplication",
+            "projectName": "app___",
+            "vmArgs": "-javaagent:../opentelemetry-javaagent.jar",
+            "args": "",
+			"env": {
+				"otel.resource.attributes=service.name" : "sender",
+				"otel.traces.exporter":"zipkin",
+				"otel.exporter.zipkin.endpoint": "http://localhost:9411/api/v2/spans",
+				"otel.logs.exporter": "none"
+
+			}
+        }
+	]
 	}
 }
