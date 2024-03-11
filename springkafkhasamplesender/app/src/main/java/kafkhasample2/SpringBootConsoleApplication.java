@@ -39,7 +39,7 @@ public class SpringBootConsoleApplication implements CommandLineRunner {
     
         try {
 
-            CamelContext context = new DefaultCamelContext();
+         /*  CamelContext context = new DefaultCamelContext();
  
             context.addRoutes(new RouteBuilder() {
                 public void configure() {
@@ -57,7 +57,7 @@ public class SpringBootConsoleApplication implements CommandLineRunner {
 
                 // Set the traceparent header
                 Message in = exchange.getIn();
-                in.setHeader("traceparent", "00-" + traceId + "-" + spanContext.getSpanId() + "-01");
+               // in.setHeader("traceparent", "00-" + traceId + "-" + spanContext.getSpanId() + "-01");
 
 
          
@@ -113,7 +113,7 @@ public class SpringBootConsoleApplication implements CommandLineRunner {
 
                 // Set the traceparent header
                 Message in = exchange.getIn();
-                in.setHeader("traceparent", "00-" + traceId + "-" + spanContext.getSpanId() + "-01");
+              //  in.setHeader("traceparent", "00-" + traceId + "-" + spanContext.getSpanId() + "-01");
  
                           
                              
@@ -125,9 +125,9 @@ public class SpringBootConsoleApplication implements CommandLineRunner {
                 }
             });
     
-            context.start();
+            context.start();*/
             Thread.sleep(100000);
-            context.stop();
+           // context.stop();
         } catch (Exception e) {
             e.printStackTrace();
         }

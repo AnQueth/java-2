@@ -35,7 +35,7 @@ public class SpringBootConsoleApplication implements CommandLineRunner {
     public void run(String... args) {
     
         try {
-
+/* 
             CamelContext context = new DefaultCamelContext();
         
             context.addRoutes(new RouteBuilder() {
@@ -67,8 +67,18 @@ public class SpringBootConsoleApplication implements CommandLineRunner {
                             String spanid = Span.current().getSpanContext().getTraceId();
                             String message = exchange.getIn().getBody(String.class);
                             System.out.println("Received message part 2: " + message + " " + spanid);
-                        });
-                       /* .process(exchange -> {
+                        })
+                        .process(exchange -> {
+                            String spanid = Span.current().getSpanContext().getTraceId();
+                            String message = exchange.getIn().getBody(String.class);
+                            System.out.println("Received message part 3: " + message + " " + spanid);
+                        })
+                        .process(exchange -> {
+                            String spanid = Span.current().getSpanContext().getTraceId();
+                            String message = exchange.getIn().getBody(String.class);
+                            System.out.println("Received message part 4: " + message + " " + spanid);
+                        })
+                       .process(exchange -> {
 
 
                             String spanid = Span.current().getSpanContext().getTraceId();
@@ -83,20 +93,21 @@ public class SpringBootConsoleApplication implements CommandLineRunner {
                             Thread.sleep(1000);
                             spanid = Span.current().getSpanContext().getTraceId();
                             String message = exchange.getIn().getBody(String.class);
-                            System.out.println("Received message part 2: " + message + " " + spanid);
+                            System.out.println("Received message part 5: " + message + " " + spanid);
                         } finally {
                             newSpan.end();
                         }
 
          
                         });
-                        */
+                        
                 }
             });
     
             context.start();
-            Thread.sleep(100000);
-            context.stop();
+            */
+            Thread.sleep(1000000);
+           // context.stop();
         } catch (Exception e) {
             e.printStackTrace();
         }
