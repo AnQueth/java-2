@@ -35,79 +35,9 @@ public class SpringBootConsoleApplication implements CommandLineRunner {
     public void run(String... args) {
     
         try {
-/* 
-            CamelContext context = new DefaultCamelContext();
-        
-            context.addRoutes(new RouteBuilder() {
-                public void configure() {
-        
-    
-                        from("kafka:another?brokers=localhost:29092&groupId=group3")
-                                      .process(exchange -> {
-                                        String traceparent=exchange.getIn().getHeader("traceparent", String.class);
-                                        if(traceparent != null) {
-                                            String[] parts = traceparent.split("-");
-                                            String traceId=parts[1];
-                                            String spanId=parts[2];
-                                            SpanContext parentContext=SpanContext.createFromRemoteParent(
-                                                traceId, spanId, TraceFlags.getSampled(), TraceState.getDefault());
-                        
-                                            
-                                            
-                                            Span span=GlobalOpenTelemetry.getTracer("testing")
-                                                .spanBuilder("span-name")
-                                                .setParent(Context.current().with(Span.wrap(parentContext)))
-                                                .startSpan();
-                                                
-                                            span.makeCurrent();
-                }
-
-                        })
-                        .process(exchange -> {
-                            String spanid = Span.current().getSpanContext().getTraceId();
-                            String message = exchange.getIn().getBody(String.class);
-                            System.out.println("Received message part 2: " + message + " " + spanid);
-                        })
-                        .process(exchange -> {
-                            String spanid = Span.current().getSpanContext().getTraceId();
-                            String message = exchange.getIn().getBody(String.class);
-                            System.out.println("Received message part 3: " + message + " " + spanid);
-                        })
-                        .process(exchange -> {
-                            String spanid = Span.current().getSpanContext().getTraceId();
-                            String message = exchange.getIn().getBody(String.class);
-                            System.out.println("Received message part 4: " + message + " " + spanid);
-                        })
-                       .process(exchange -> {
-
-
-                            String spanid = Span.current().getSpanContext().getTraceId();
-                      
-                            System.out.println("spid: " + spanid);
-
-                            Span newSpan = GlobalOpenTelemetry.getTracer("testing")
-                            .spanBuilder("doing more work")
-                            .startSpan();
-        
-                        try (Scope scope = newSpan.makeCurrent()) {
-                            Thread.sleep(1000);
-                            spanid = Span.current().getSpanContext().getTraceId();
-                            String message = exchange.getIn().getBody(String.class);
-                            System.out.println("Received message part 5: " + message + " " + spanid);
-                        } finally {
-                            newSpan.end();
-                        }
-
-         
-                        });
-                        
-                }
-            });
-    
-            context.start();
-            */
+ 
             Thread.sleep(1000000);
-           // context.stop();
+     
         } catch (Exception e) {
             e.printStackTrace();
         }

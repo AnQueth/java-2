@@ -36,6 +36,9 @@ dependencies {
   
   implementation 'org.apache.camel.springboot:camel-opentelemetry-starter:4.4.0'
 
+ 
+
+
 }
 
 

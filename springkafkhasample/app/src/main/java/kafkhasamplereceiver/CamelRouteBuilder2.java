@@ -4,6 +4,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.opentelemetry.OpenTelemetryTracer;
 import org.springframework.stereotype.Component;
 
 import io.opentelemetry.api.GlobalOpenTelemetry;
@@ -19,7 +20,10 @@ import io.opentelemetry.context.Scope;
 public class CamelRouteBuilder2 extends RouteBuilder {
     @Override
     public void configure() throws Exception {
-        from("kafka:another?brokers=localhost:29092&groupId=group3")
+
+   
+
+        from("kafka:another?brokers=localhost:29092&groupId=group2&autoOffsetReset=earliest")
                 .process(ReadSpanFromHeader())
 
                 .process(exchange -> {
@@ -96,8 +100,7 @@ public class CamelRouteBuilder2 extends RouteBuilder {
             SpanContext spanContext = currentSpan.getSpanContext();
 
             String traceId = spanContext.getTraceId();
-            TraceState traceState = spanContext.getTraceState();
-
+         
             // Set the traceparent header
             Message in = exchange.getIn();
             in.setHeader("traceparent", "00-" + traceId + "-" + spanContext.getSpanId() + "-01");

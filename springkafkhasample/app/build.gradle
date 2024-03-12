@@ -34,6 +34,8 @@ dependencies {
    // Spring Boot Starter for autoconfiguration and starter dependencies
     implementation 'org.springframework.boot:spring-boot-starter:3.2.3'
 implementation 'org.apache.camel.springboot:camel-opentelemetry-starter:4.4.0'
+ 
+
 }
 
 
